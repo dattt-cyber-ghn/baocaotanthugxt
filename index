@@ -9,7 +9,6 @@
     <!-- Tải Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <style>
-        /* Tùy chỉnh font Inter (Tailwind mặc định) */
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f7f9fc;
@@ -17,160 +16,229 @@
         .data-card {
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
         }
-        .trend-up {
-            color: #ef4444; /* Red */
-        }
-        .trend-down {
-            color: #10b981; /* Green */
-        }
+        .delta-positive { color: #ef4444; } /* Red for negative trend (Tăng lỗi) */
+        .delta-negative { color: #10b981; } /* Green for positive trend (Giảm lỗi) */
+        .table-header { background-color: #eef2ff; }
     </style>
 </head>
 <body>
 
     <div id="app" class="min-h-screen p-4 sm:p-8">
         <!-- HEADER -->
-        <header class="text-center mb-10 p-6 bg-white rounded-xl shadow-lg">
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2">BÁO CÁO HIỆU QUẢ ĐÀO TẠO TÂN THỦ GXT</h1>
-            <p class="text-xl text-gray-600 font-medium">Phân tích Hiệu suất Lỗi theo Thâm niên (T3/2025 - T8/2025)</p>
+        <header class="text-center mb-10 p-6 bg-white rounded-xl shadow-lg border-b-4 border-indigo-600">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2">BÁO CÁO HIỆU QUẢ ĐÀO TẠO HỆ THỐNG TÂN THỦ GXT</h1>
+            <p class="text-xl text-gray-600 font-medium">Phân tích Tác động của Chương trình đối với 3 Loại Lỗi Chính (T3/2025 - T8/2025)</p>
         </header>
 
-        <!-- DATA SUMMARY -->
+        <!-- SUMMARY CARDS -->
         <section class="mb-12">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-indigo-200 pb-2">Tóm Tắt Hiệu Quả Chương Trình Đào Tạo</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-indigo-200 pb-2">Tóm Tắt Kết Quả Chính</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
-                <!-- Nhóm < 30 ngày -->
-                <div class="data-card bg-white p-6 rounded-xl border-l-4 border-indigo-500">
-                    <h3 class="text-xl font-semibold mb-3 text-indigo-700">Nhóm Tân thủ mới (&lt; 30 ngày)</h3>
-                    <p class="text-gray-600 mb-2">Sai Call Log: <span class="text-lg font-bold trend-down">3.07%</span> (Ổn định, mức thấp)</p>
-                    <p class="text-gray-600 mb-2">Sai POD: <span class="text-lg font-bold trend-up">34.78%</span> (Tăng mạnh, cần theo dõi)</p>
-                    <p class="text-gray-600">Sai Lý do GTB: <span class="text-lg font-bold trend-up">6.93%</span> (Tăng mạnh, cần rà soát)</p>
-                </div>
-                
-                <!-- Nhóm 31 - 60 ngày -->
-                <div class="data-card bg-white p-6 rounded-xl border-l-4 border-green-500">
-                    <h3 class="text-xl font-semibold mb-3 text-green-700">Nhóm Thâm niên ngắn (31 - 60 ngày)</h3>
-                    <p class="text-gray-600 mb-2">Sai Call Log: <span class="text-lg font-bold trend-down">3.66%</span> (Giảm mạnh -11.51 điểm %)</p>
-                    <p class="text-gray-600 mb-2">Sai POD: <span class="text-lg font-bold trend-down">33.01%</span> (Giảm rõ rệt -8.66 điểm %)</p>
-                    <p class="text-gray-600">Sai Lý do GTB: <span class="text-lg font-bold trend-up">6.54%</span> (Tăng nhẹ, ổn định)</p>
-                </div>
-                
-                <!-- Nhóm > 60 ngày -->
-                <div class="data-card bg-white p-6 rounded-xl border-l-4 border-gray-500">
-                    <h3 class="text-xl font-semibold mb-3 text-gray-700">Nhóm Thâm niên dài (> 60 ngày)</h3>
-                    <p class="text-gray-600 mb-2">Sai Call Log: <span class="text-lg font-bold trend-down">3.80%</span> (Kiểm soát tốt)</p>
-                    <p class="text-gray-600 mb-2">Sai POD: <span class="text-lg font-bold trend-down">37.47%</span> (Giảm -6.44 điểm %)</p>
-                    <p class="text-gray-600">Sai Lý do GTB: <span class="text-lg font-bold trend-up">6.20%</span> (Ổn định)</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- CHART SECTION -->
-        <section class="mb-12">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-indigo-200 pb-2">Phân Tích Tỷ Lệ Lỗi Trung Bình Sau Chương Trình</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-                <!-- Biểu đồ 1: Sai POD -->
-                <div class="data-card bg-white p-6 rounded-xl">
-                    <h3 class="text-xl font-semibold text-center mb-4 text-gray-700">A. Sai POD (Product Owner Decision)</h3>
-                    <canvas id="chartPod"></canvas>
-                    <p class="text-sm text-center mt-3 text-gray-500 italic">Đơn vị: Tỷ lệ vi phạm trung bình SAU (T3/2025 - T8/2025)</p>
-                </div>
-
-                <!-- Biểu đồ 2: Sai Call Log -->
-                <div class="data-card bg-white p-6 rounded-xl">
-                    <h3 class="text-xl font-semibold text-center mb-4 text-gray-700">B. Sai Call Log</h3>
-                    <canvas id="chartCallLog"></canvas>
-                    <p class="text-sm text-center mt-3 text-gray-500 italic">Đơn vị: Tỷ lệ vi phạm trung bình SAU (T3/2025 - T8/2025)</p>
-                </div>
-
-                <!-- Biểu đồ 3: Sai Lý do GTB -->
-                <div class="data-card bg-white p-6 rounded-xl">
-                    <h3 class="text-xl font-semibold text-center mb-4 text-gray-700">C. Sai Cập nhật lý do GTB</h3>
-                    <canvas id="chartLydoGTB"></canvas>
-                    <p class="text-sm text-center mt-3 text-gray-500 italic">Đơn vị: Tỷ lệ vi phạm trung bình SAU (T3/2025 - T8/2025)</p>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- KEY FINDINGS & RECOMMENDATIONS -->
-        <section class="mb-12 p-8 bg-white rounded-xl shadow-lg border-t-4 border-red-500">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-gray-200 pb-2">Nhận Định & Đề Xuất Cải Thiện Chính</h2>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div>
-                    <h3 class="text-xl font-semibold text-red-600 mb-3 flex items-center">
+                <!-- Sai POD -->
+                <div class="data-card bg-white p-6 rounded-xl border-l-4 border-red-500">
+                    <h3 class="text-xl font-semibold mb-3 text-red-700 flex items-center">
                         <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                        Vấn đề Cần Cảnh Báo
+                        Sai POD (Product Owner Decision)
                     </h3>
-                    <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                        <li>**Nhóm Tân thủ mới (&lt; 30 ngày)** có tỷ lệ Sai POD và Sai Cập nhật Lý do GTB **tăng mạnh** sau khi áp dụng chương trình, cho thấy kiến thức cốt lõi chưa được trang bị kịp thời và đầy đủ.</li>
-                        <li>Tỷ lệ Sai POD ở nhóm &lt; 30 ngày đạt mức trung bình cao nhất (34.78%), cảnh báo về sự cần thiết phải rà soát quy trình hướng dẫn.</li>
-                    </ul>
+                    <p class="text-gray-600 mb-1">Nhóm &lt; 30 ngày: <span class="text-lg font-bold delta-positive">+25.67%</span> (Tăng mạnh TB)</p>
+                    <p class="text-gray-600 mb-1">Nhóm 31-60 ngày: <span class="text-lg font-bold delta-negative">-8.66%</span> (Giảm, Hiệu quả)</p>
+                    <p class="text-gray-600">Kết quả cuối (T8/2025): **15.56%** (Tốt)</p>
                 </div>
-
-                <div>
-                    <h3 class="text-xl font-semibold text-green-600 mb-3 flex items-center">
+                
+                <!-- Sai Call Log -->
+                <div class="data-card bg-white p-6 rounded-xl border-l-4 border-green-500">
+                    <h3 class="text-xl font-semibold mb-3 text-green-700 flex items-center">
                         <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.001 12.001 0 0012 21a12.001 12.001 0 008.618-3.04z"></path></svg>
-                        Kết quả Tích Cực
+                        Sai Call Log
                     </h3>
-                    <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                        <li>**Sai Call Log** được kiểm soát hiệu quả ngay lập tức trên cả 3 nhóm thâm niên, đặc biệt là nhóm 31-60 ngày (giảm 11.51 điểm %).</li>
-                        <li>**Nhóm 31 - 60 ngày** thể hiện sự cải thiện rõ rệt nhất với mức giảm lỗi mạnh mẽ ở cả Sai POD và Sai Call Log.</li>
-                        <li>Vào tháng cuối (T8/2025), tỷ lệ Sai POD ở cả hai nhóm tân thủ (&lt; 60 ngày) đều đã được điều chỉnh về mức tốt (15.56%).</li>
-                    </ul>
+                    <p class="text-gray-600 mb-1">Nhóm 31-60 ngày: <span class="text-lg font-bold delta-negative">-11.51%</span> (Giảm mạnh)</p>
+                    <p class="text-gray-600 mb-1">Nhóm &lt; 30 ngày: <span class="text-lg font-bold">3.07%</span> (Ổn định, mức thấp)</p>
+                    <p class="text-gray-600">Đánh giá: **Kiểm soát thành công** ngay lập tức.</p>
                 </div>
-            </div>
-
-            <div class="mt-8 pt-6 border-t border-gray-200">
-                <h3 class="text-xl font-semibold text-indigo-700 mb-3">Đề Xuất Cải Tiến</h3>
-                <ol class="list-decimal list-inside space-y-2 text-gray-700 ml-4">
-                    <li>**Điều chỉnh Tần suất & Độ ưu tiên Bài học:** Tập trung các bài học cốt lõi (Sai POD, Lý do GTB) vào **Tuần đầu tiên** của nhân viên mới.</li>
-                    <li>**Điều chỉnh Thời lượng Bài học:** Tăng thời lượng các bài học SOP quan trọng lên **tối đa 15 phút** để đảm bảo nhân viên mới hiểu và áp dụng kiến thức một cách chi tiết.</li>
-                </ol>
+                
+                <!-- Sai Lý do GTB -->
+                <div class="data-card bg-white p-6 rounded-xl border-l-4 border-blue-500">
+                    <h3 class="text-xl font-semibold mb-3 text-blue-700 flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m-9 6h10a2 2 0 002-2V7a2 2 0 00-2-2H9a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        Sai Cập nhật Lý do GTB
+                    </h3>
+                    <p class="text-gray-600 mb-1">Nhóm &lt; 30 ngày: <span class="text-lg font-bold delta-positive">+4.85%</span> (Tăng mạnh)</p>
+                    <p class="text-gray-600 mb-1">Nhóm 31-60 ngày: <span class="text-lg font-bold">6.54%</span> (Ổn định)</p>
+                    <p class="text-gray-600">Đánh giá: **Cần rà soát** quy trình hỗ trợ cho tân thủ mới.</p>
+                </div>
             </div>
         </section>
+
+        <!-- DETAILED COMPARISON TABLE AND CHARTS -->
+        <section class="mb-12 p-8 bg-white rounded-xl shadow-lg">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-gray-200 pb-2">So Sánh Chi Tiết Tỷ Lệ Lỗi (TRƯỚC vs SAU Chương Trình)</h2>
+            
+            <div class="overflow-x-auto mb-10">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider table-header" rowspan="2">Nhóm Thâm Niên</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider table-header" colspan="4">A. Sai POD (Product Owner Decision)</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider table-header" colspan="4">B. Sai Call Log</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider table-header" colspan="4">C. Sai Lý do GTB</th>
+                        </tr>
+                        <tr>
+                            <!-- Sai POD -->
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">TRƯỚC (T8/24-T1/25)</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">SAU (T3/25-T8/25)</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tăng/Giảm (%)</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Đánh giá</th>
+                            <!-- Sai Call Log -->
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">TRƯỚC (T8/24-T1/25)</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">SAU (T3/25-T8/25)</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tăng/Giảm (%)</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Đánh giá</th>
+                            <!-- Sai Lý do GTB -->
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">TRƯỚC (T8/24-T1/25)</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">SAU (T3/25-T8/25)</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tăng/Giảm (%)</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Đánh giá</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200 text-sm">
+                        <!-- Dữ liệu < 30 ngày -->
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-indigo-600">&lt; 30 ngày</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">9.11%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">34.78%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center delta-positive">+25.67</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-red-600">Cần theo dõi</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">2.64%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">3.07%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center delta-positive">+0.43</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-green-600">Ổn định, mức thấp</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">2.08%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">6.93%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center delta-positive">+4.85</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-red-600">Cần rà soát lại</td>
+                        </tr>
+                        <!-- Dữ liệu 31 - 60 ngày -->
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-green-600">31 - 60 ngày</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">41.67%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">33.01%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center delta-negative">-8.66</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-green-600">Hiệu quả rõ rệt</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">15.17%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">3.66%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center delta-negative">-11.51</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-green-600">Giảm mạnh</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">5.72%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">6.54%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center delta-positive">+0.82</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-blue-600">Ổn định</td>
+                        </tr>
+                         <!-- Dữ liệu > 60 ngày -->
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-600">&gt; 60 ngày</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">43.91%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">37.47%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center delta-negative">-6.44</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-green-600">Cải thiện tốt</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">6.49%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">3.80%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center delta-negative">-2.69</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-green-600">Kiểm soát tốt</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">5.94%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">6.20%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center delta-positive">+0.26</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-blue-600">Ổn định</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- CHART SECTION -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-8 border-t border-gray-100">
+
+                <!-- Biểu đồ 1: Sai POD (So sánh TRƯỚC vs SAU) -->
+                <div class="data-card bg-gray-50 p-4 rounded-xl">
+                    <h3 class="text-lg font-semibold text-center mb-3 text-gray-700">A. So sánh Tỷ lệ Sai POD (%)</h3>
+                    <canvas id="chartPod"></canvas>
+                </div>
+
+                <!-- Biểu đồ 2: Sai Call Log (So sánh TRƯỚC vs SAU) -->
+                <div class="data-card bg-gray-50 p-4 rounded-xl">
+                    <h3 class="text-lg font-semibold text-center mb-3 text-gray-700">B. So sánh Tỷ lệ Sai Call Log (%)</h3>
+                    <canvas id="chartCallLog"></canvas>
+                </div>
+
+                <!-- Biểu đồ 3: Sai Lý do GTB (So sánh TRƯỚC vs SAU) -->
+                <div class="data-card bg-gray-50 p-4 rounded-xl">
+                    <h3 class="text-lg font-semibold text-center mb-3 text-gray-700">C. So sánh Tỷ lệ Sai Lý do GTB (%)</h3>
+                    <canvas id="chartLydoGTB"></canvas>
+                </div>
+            </div>
+        </section>
+
 
     </div>
 
     <script>
-        // Dữ liệu lấy từ Báo cáo Google Doc
+        // Dữ liệu lấy từ Báo cáo Google Doc (Tỷ lệ vi phạm trung bình)
         const labels = ['< 30 ngày', '31 - 60 ngày', '> 60 ngày'];
-        const colors = ['#3b82f6', '#10b981', '#6b7280']; // Blue, Green, Gray
+        const colorBefore = '#93c5fd'; // Blue-300
+        const colorAfter = '#1d4ed8'; // Blue-700
 
-        const dataPod = [34.78, 33.01, 37.47];
-        const dataCallLog = [3.07, 3.66, 3.80];
-        const dataLydoGTB = [6.93, 6.54, 6.20];
+        // Dữ liệu Sai POD
+        const dataPodBefore = [9.11, 41.67, 43.91];
+        const dataPodAfter = [34.78, 33.01, 37.47];
+
+        // Dữ liệu Sai Call Log
+        const dataCallLogBefore = [2.64, 15.17, 6.49];
+        const dataCallLogAfter = [3.07, 3.66, 3.80];
+
+        // Dữ liệu Sai Lý do GTB
+        const dataLydoGTBBefore = [2.08, 5.72, 5.94];
+        const dataLydoGTBAfter = [6.93, 6.54, 6.20];
 
         /**
-         * Hàm khởi tạo biểu đồ
+         * Hàm khởi tạo biểu đồ dạng Bar (cột) so sánh TRƯỚC và SAU
          * @param {string} canvasId ID của thẻ canvas
-         * @param {string} chartTitle Tiêu đề của biểu đồ
-         * @param {number[]} data Mảng dữ liệu
+         * @param {number[]} dataBefore Mảng dữ liệu giai đoạn TRƯỚC
+         * @param {number[]} dataAfter Mảng dữ liệu giai đoạn SAU
          */
-        function createChart(canvasId, chartTitle, data) {
+        function createComparisonChart(canvasId, dataBefore, dataAfter) {
             const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            // Tìm giá trị max để đặt giới hạn trục Y
+            const maxVal = Math.max(...dataBefore, ...dataAfter);
+
             new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
-                    datasets: [{
-                        label: 'Tỷ lệ Lỗi TB (%)',
-                        data: data,
-                        backgroundColor: colors,
-                        borderColor: colors.map(c => c.replace('2', '9')), // Slightly darker border
-                        borderWidth: 1
-                    }]
+                    datasets: [
+                        {
+                            label: 'Giai đoạn TRƯỚC',
+                            data: dataBefore,
+                            backgroundColor: colorBefore,
+                            borderRadius: 4,
+                        },
+                        {
+                            label: 'Giai đoạn SAU',
+                            data: dataAfter,
+                            backgroundColor: colorAfter,
+                            borderRadius: 4,
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: true,
                     plugins: {
                         legend: {
-                            display: false,
-                        },
-                        title: {
-                            display: false,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                            }
                         },
                         tooltip: {
                             callbacks: {
@@ -188,15 +256,20 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            max: Math.max(...data) * 1.2, // Auto-scale max value slightly higher than max data point
+                            max: maxVal * 1.1, // Thêm 10% cho khoảng trống
                             title: {
                                 display: true,
-                                text: 'Tỷ lệ Lỗi (%)'
+                                text: 'Tỷ lệ Lỗi TB (%)'
                             },
                             ticks: {
-                                callback: function(value, index, values) {
+                                callback: function(value) {
                                     return value + ' %';
                                 }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
                             }
                         }
                     }
@@ -206,9 +279,9 @@
 
         // Khởi tạo các biểu đồ khi DOM đã sẵn sàng
         document.addEventListener('DOMContentLoaded', () => {
-            createChart('chartPod', 'Sai POD', dataPod);
-            createChart('chartCallLog', 'Sai Call Log', dataCallLog);
-            createChart('chartLydoGTB', 'Sai Cập nhật lý do GTB', dataLydoGTB);
+            createComparisonChart('chartPod', dataPodBefore, dataPodAfter);
+            createComparisonChart('chartCallLog', dataCallLogBefore, dataCallLogAfter);
+            createComparisonChart('chartLydoGTB', dataLydoGTBBefore, dataLydoGTBAfter);
         });
     </script>
 </body>
